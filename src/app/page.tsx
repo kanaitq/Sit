@@ -10,7 +10,7 @@ export default function Home() {
           <DynamicContentWrapper seats={seats} />
           
           <footer className="mt-16 text-center text-slate-500 text-sm">
-            <p>© {new Date().getFullYear()} Food Selection App</p>
+            <p>© {new Date().getFullYear()} Seating App | Real-Time Synchronized</p>
           </footer>
         </div>
       </div>

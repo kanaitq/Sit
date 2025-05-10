@@ -2,16 +2,9 @@
  * This file provides a database-independent implementation
  * that works with an in-memory data store.
  */
+import { EventEmitter } from 'events';
 
-// In-memory data store
-const memoryStore = {
-  guestCount: 0,
-  lastReset: new Date(),
-  seatSelections: new Map<string, boolean>(),
-  foodOptions: new Map<string, { id: string; name: string; icon: string; selected: boolean }>()
-};
-
-// Initialize with some sample food options
+// Sample food options for initialization
 const sampleFoodOptions = [
   { id: "f1", name: "Pasta", icon: "M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z", selected: false },
   { id: "f2", name: "Pizza", icon: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-11c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z", selected: false },
@@ -24,21 +17,69 @@ const sampleFoodOptions = [
   { id: "f9", name: "Chicken", icon: "M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7 0-1.86.74-3.55 1.94-4.8L5 5.28l1.39-1.39 16.28 16.29-1.4 1.39-3.57-3.57c-1.49.88-3.23 1.4-5.1 1.4zm2.83-7.17L9.17 15C11.39 15 13 13.5 13 13s-1.8-2.83-4.17-2.83L11.17 8c3.07.85 5.16 3.7 5.16 7 0 .85-.15 1.66-.4 2.43l-1.1-1.1z", selected: false }
 ];
 
-// Initialize sample data
-for (const option of sampleFoodOptions) {
-  memoryStore.foodOptions.set(option.id, option);
-}
-
-// Initialize seat positions
+// Seat positions
 const seatPositions = [
   'top-left', 'top-center', 'top-right', 
   'bottom-left', 'bottom-center', 'bottom-right'
 ];
 
-// Initialize seat selections
-for (const position of seatPositions) {
-  memoryStore.seatSelections.set(position, false);
+// Create a type definition for the global store
+type MemoryStore = {
+  guestCount: number;
+  lastReset: Date;
+  seatSelections: Map<string, boolean>;
+  foodOptions: Map<string, { id: string; name: string; icon: string; selected: boolean }>;
+};
+
+// Define a global for TypeScript
+declare global {
+  var __memoryStore: MemoryStore | undefined;
+  var __storeEvents: EventEmitter | undefined;
 }
+
+// Initialize the global memory store if it doesn't exist
+if (!global.__memoryStore) {
+  global.__memoryStore = {
+    guestCount: 0,
+    lastReset: new Date(),
+    seatSelections: new Map<string, boolean>(),
+    foodOptions: new Map<string, any>()
+  };
+  
+  // Initialize with sample data
+  for (const option of sampleFoodOptions) {
+    global.__memoryStore.foodOptions.set(option.id, option);
+  }
+  
+  for (const position of seatPositions) {
+    global.__memoryStore.seatSelections.set(position, false);
+  }
+
+  console.log('Global memory store initialized');
+}
+
+// Initialize event emitter if it doesn't exist
+if (!global.__storeEvents) {
+  global.__storeEvents = new EventEmitter();
+  // Set high limit for event listeners to avoid memory leak warnings
+  global.__storeEvents.setMaxListeners(100);
+  console.log('Global event emitter initialized');
+}
+
+// Use the global memory store and event emitter
+const memoryStore = global.__memoryStore as MemoryStore;
+const storeEvents = global.__storeEvents as EventEmitter;
+
+// Event types
+export const StoreEvents = {
+  SEAT_UPDATED: 'seat:updated',
+  SEAT_RESET: 'seat:reset',
+  FOOD_UPDATED: 'food:updated',
+  FOOD_RESET: 'food:reset',
+  GUEST_UPDATED: 'guest:updated',
+  GUEST_RESET: 'guest:reset',
+  FULL_RESET: 'full:reset'
+};
 
 // Helper to determine if today is a new day compared to stored date
 const isNewDay = (storedDate: Date): boolean => {
@@ -47,6 +88,9 @@ const isNewDay = (storedDate: Date): boolean => {
 
 // Database interface
 export const db = {
+  // Event emitter for real-time updates
+  events: storeEvents,
+
   // Guest count operations
   guests: {
     get: async (): Promise<{ count: number; lastReset: Date }> => {
@@ -54,6 +98,7 @@ export const db = {
       if (isNewDay(memoryStore.lastReset)) {
         memoryStore.guestCount = 0;
         memoryStore.lastReset = new Date();
+        storeEvents.emit(StoreEvents.GUEST_RESET, { count: 0, lastReset: memoryStore.lastReset });
         console.log('Midnight passed, resetting guest count');
       }
       
@@ -70,19 +115,30 @@ export const db = {
       
       memoryStore.guestCount = count;
       
-      return { 
+      const result = { 
         count: memoryStore.guestCount, 
         lastReset: memoryStore.lastReset 
       };
+
+      // Emit update event
+      storeEvents.emit(StoreEvents.GUEST_UPDATED, result);
+      
+      return result;
     },
     
     reset: async (): Promise<{ count: number; lastReset: Date }> => {
       memoryStore.guestCount = 0;
+      memoryStore.lastReset = new Date();
       
-      return { 
+      const result = { 
         count: 0, 
         lastReset: memoryStore.lastReset 
       };
+
+      // Emit reset event
+      storeEvents.emit(StoreEvents.GUEST_RESET, result);
+      
+      return result;
     }
   },
   
@@ -97,13 +153,22 @@ export const db = {
     
     update: async (position: string, selected: boolean): Promise<{ position: string; selected: boolean }> => {
       memoryStore.seatSelections.set(position, selected);
-      return { position, selected };
+      
+      const result = { position, selected };
+      
+      // Emit update event
+      storeEvents.emit(StoreEvents.SEAT_UPDATED, result);
+      
+      return result;
     },
     
     reset: async (): Promise<void> => {
       for (const position of seatPositions) {
         memoryStore.seatSelections.set(position, false);
       }
+      
+      // Emit reset event
+      storeEvents.emit(StoreEvents.SEAT_RESET);
     }
   },
   
@@ -119,7 +184,13 @@ export const db = {
         option.selected = selected;
         memoryStore.foodOptions.set(id, option);
       }
-      return { id, selected };
+      
+      const result = { id, selected };
+      
+      // Emit update event
+      storeEvents.emit(StoreEvents.FOOD_UPDATED, result);
+      
+      return result;
     },
     
     reset: async (): Promise<void> => {
@@ -127,6 +198,9 @@ export const db = {
         option.selected = false;
         memoryStore.foodOptions.set(id, option);
       }
+      
+      // Emit reset event
+      storeEvents.emit(StoreEvents.FOOD_RESET);
     }
   }
 }; 

@@ -6,6 +6,7 @@ import { type Seat } from '~/data/seatsData';
 import { initDevEnvironment } from '~/utils/devInit';
 import ErrorBoundary from './ErrorBoundary';
 import NetworkStatus from './NetworkStatus';
+import { RealTimeStatus } from './RealTimeStatus';
 
 // Import components with dynamic imports in a client component
 // Optimize loading state by memoizing it
@@ -42,6 +43,7 @@ interface DynamicContentWrapperProps {
 function DynamicContentWrapper({ seats }: DynamicContentWrapperProps) {
   const [isClient, setIsClient] = useState(false);
   const [initError, setInitError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Initialize only once on mount
   useEffect(() => {
@@ -53,6 +55,8 @@ function DynamicContentWrapper({ seats }: DynamicContentWrapperProps) {
     } catch (error) {
       console.error('Error initializing dev environment:', error);
       setInitError(error instanceof Error ? error : new Error('Unknown initialization error'));
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -125,20 +129,53 @@ function DynamicContentWrapper({ seats }: DynamicContentWrapperProps) {
     );
 
   return (
-    <>
-      <header className="text-center mb-12">
-        <ErrorBoundary fallback={timeDisplayErrorFallback}>
-        <SingaporeTimeDisplay />
-        </ErrorBoundary>
-      </header>
-      
-      <ErrorBoundary fallback={tableErrorFallback}>
-      <ClientTableWrapper seats={seats} />
-      </ErrorBoundary>
-      
+    <div className="relative">
+      {/* Show error if initialization failed */}
+      {initError && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">
+                Failed to initialize the application. Please try refreshing the page.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Show loading spinner while components are loading */}
+      {isLoading && !initError && (
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+          <p className="text-gray-600">Loading components...</p>
+        </div>
+      )}
+
+      {/* Render components once loaded */}
+      {!isLoading && !initError && ClientTableWrapper && SingaporeTimeDisplay && (
+        <>
+          <ErrorBoundary fallback={tableErrorFallback}>
+            <ClientTableWrapper seats={seats} />
+          </ErrorBoundary>
+          <div className="mt-8">
+            <ErrorBoundary fallback={timeDisplayErrorFallback}>
+              <SingaporeTimeDisplay />
+            </ErrorBoundary>
+          </div>
+        </>
+      )}
+
       {/* Network status indicator */}
       <NetworkStatus />
-    </>
+
+      {/* Real-time status indicator */}
+      <RealTimeStatus />
+    </div>
   );
 } 
 
