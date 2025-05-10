@@ -8,12 +8,16 @@ import {
   toggleOptionSelection,
   clearAllFoodSelections
 } from '~/data/foodOptions';
+import { useRealTime } from '~/context/RealTimeProvider';
 import type { FoodOption } from '~/data/foodOptions';
 
 const FoodSelector: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<FoodOption[]>([]);
   const [availableOptions, setAvailableOptions] = useState<FoodOption[]>([]);
   const [highlightedOption, setHighlightedOption] = useState<string | null>(null);
+  
+  // Connect to real-time updates
+  const { registerFoodUpdateHandler } = useRealTime();
 
   // Memoize the loadOptions function to prevent recreation on each render
   const loadOptions = useCallback(async () => {
@@ -44,6 +48,23 @@ const FoodSelector: React.FC = () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [loadOptions]);
+  
+  // Register for real-time updates
+  useEffect(() => {
+    // Handle real-time food updates from other clients
+    const unregister = registerFoodUpdateHandler((data) => {
+      console.log(`Real-time update for food ${data.id}:`, data.selected);
+      
+      // Apply highlight effect
+      setHighlightedOption(data.id);
+      setTimeout(() => setHighlightedOption(null), 700);
+      
+      // Refresh food options to reflect changes
+      loadOptions();
+    });
+    
+    return unregister;
+  }, [registerFoodUpdateHandler, loadOptions]);
 
   // Memoize the handleOptionSelect function
   const handleOptionSelect = useCallback(async (id: string) => {
@@ -53,6 +74,7 @@ const FoodSelector: React.FC = () => {
     
     // Toggle selection
     try {
+      // This will trigger real-time updates to other clients
       await toggleOptionSelection(id);
       const selected = await getSelectedOptions();
       const available = await getAvailableOptions();
@@ -66,8 +88,9 @@ const FoodSelector: React.FC = () => {
   // Clear all selected food options - memoized
   const handleClearAll = useCallback(async () => {
     try {
+      // This will trigger real-time updates to other clients
       await clearAllFoodSelections();
-    setSelectedOptions([]);
+      setSelectedOptions([]);
       const allOptions = await getFoodOptions();
       setAvailableOptions(allOptions);
     } catch (error) {

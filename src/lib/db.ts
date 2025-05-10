@@ -71,15 +71,15 @@ const memoryStore = global.__memoryStore as MemoryStore;
 const storeEvents = global.__storeEvents as EventEmitter;
 
 // Event types
-export const StoreEvents = {
-  SEAT_UPDATED: 'seat:updated',
-  SEAT_RESET: 'seat:reset',
-  FOOD_UPDATED: 'food:updated',
-  FOOD_RESET: 'food:reset',
-  GUEST_UPDATED: 'guest:updated',
-  GUEST_RESET: 'guest:reset',
-  FULL_RESET: 'full:reset'
-};
+export enum StoreEvents {
+  SEAT_UPDATED = 'seat-updated',
+  SEAT_RESET = 'seat-reset',
+  FOOD_UPDATED = 'food-updated',
+  FOOD_RESET = 'food-reset',
+  GUEST_UPDATED = 'guest-updated',
+  GUEST_RESET = 'guest-reset',
+  FULL_RESET = 'full-reset'
+}
 
 // Helper to determine if today is a new day compared to stored date
 const isNewDay = (storedDate: Date): boolean => {

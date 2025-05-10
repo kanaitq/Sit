@@ -2,11 +2,15 @@
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { storage } from '~/utils/storage';
+import { useRealTime } from '~/context/RealTimeProvider';
 import type { SeatProps } from './types';
 
 const Seat: React.FC<SeatProps> = ({ name, position, seatId }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  
+  // Connect to real-time updates
+  const { registerSeatUpdateHandler } = useRealTime();
 
   // Load selection state on mount
   useEffect(() => {
@@ -25,6 +29,22 @@ const Seat: React.FC<SeatProps> = ({ name, position, seatId }) => {
     
     loadSeatSelection();
   }, [seatId]);
+  
+  // Register for real-time updates
+  useEffect(() => {
+    // Handle real-time seat updates from other clients
+    const unregister = registerSeatUpdateHandler((data) => {
+      if (data.position === seatId) {
+        console.log(`Real-time update for seat ${seatId}:`, data.selected);
+        setIsSelected(data.selected);
+        // Animate to highlight the change
+        setIsAnimating(true);
+        setTimeout(() => setIsAnimating(false), 700);
+      }
+    });
+    
+    return unregister;
+  }, [seatId, registerSeatUpdateHandler]);
 
   // Memoize toggle function to prevent recreation on each render
   const toggleSelection = useCallback(async () => {
@@ -35,12 +55,12 @@ const Seat: React.FC<SeatProps> = ({ name, position, seatId }) => {
     setIsSelected(newState);
     
     try {
-      // Try API first
+      // Try API first - this will trigger real-time updates to other clients
       await storage.toggleSeatSelection(seatId, newState);
     } catch (error) {
       // Fallback to localStorage
       console.log('Using localStorage fallback for toggling seat');
-    storage.setItem(`seat-${seatId}`, String(newState));
+      storage.setItem(`seat-${seatId}`, String(newState));
     }
     
     // Dispatch custom event for the Table component to catch
@@ -55,7 +75,7 @@ const Seat: React.FC<SeatProps> = ({ name, position, seatId }) => {
           ${position === 'bottom' ? 'order-first' : 'order-last'}
           cursor-pointer
           transition-all duration-300 ease-in-out
-    mx-auto mb-2 sm:mb-4
+          mx-auto mb-2 sm:mb-4
           ${isAnimating ? 'scale-110' : 'hover:scale-105'}
           transform-gpu
   `;

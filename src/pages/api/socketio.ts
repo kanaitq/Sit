@@ -41,37 +41,44 @@ export default function handler(req: NextApiRequest, res: any) {
     if (!res.socket.server.listenersInitialized) {
       // Handle seat selection updates
       db.events.on(StoreEvents.SEAT_UPDATED, (data) => {
-        io.emit(StoreEvents.SEAT_UPDATED, data);
+        console.log('Broadcasting seat update to clients:', data);
+        io.emit('seat-update', data);
       });
       
       // Handle seat reset
       db.events.on(StoreEvents.SEAT_RESET, () => {
-        io.emit(StoreEvents.SEAT_RESET);
+        console.log('Broadcasting seat reset to clients');
+        io.emit('seat-update', { reset: true });
       });
       
       // Handle food option updates
       db.events.on(StoreEvents.FOOD_UPDATED, (data) => {
-        io.emit(StoreEvents.FOOD_UPDATED, data);
+        console.log('Broadcasting food update to clients:', data);
+        io.emit('food-update', data);
       });
       
       // Handle food reset
       db.events.on(StoreEvents.FOOD_RESET, () => {
-        io.emit(StoreEvents.FOOD_RESET);
+        console.log('Broadcasting food reset to clients');
+        io.emit('food-update', { reset: true });
       });
       
       // Handle guest count updates
       db.events.on(StoreEvents.GUEST_UPDATED, (data) => {
-        io.emit(StoreEvents.GUEST_UPDATED, data);
+        console.log('Broadcasting guest update to clients:', data);
+        io.emit('guest-update', data);
       });
       
       // Handle guest reset
       db.events.on(StoreEvents.GUEST_RESET, (data) => {
-        io.emit(StoreEvents.GUEST_RESET, data);
+        console.log('Broadcasting guest reset to clients:', data);
+        io.emit('guest-update', { ...data, reset: true });
       });
       
       // Handle full reset
       db.events.on(StoreEvents.FULL_RESET, () => {
-        io.emit(StoreEvents.FULL_RESET);
+        console.log('Broadcasting full reset to clients');
+        io.emit('full-reset');
       });
       
       // Mark listeners as initialized

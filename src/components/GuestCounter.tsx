@@ -3,10 +3,15 @@
 import { useState, useEffect } from 'react';
 import type { GuestCounterProps } from './types';
 import { storage } from '~/utils/storage';
+import { useRealTime } from '~/context/RealTimeProvider';
 
 const GuestCounter = ({ maxGuests = 10, defaultValue = 0 }: GuestCounterProps) => {
   const [guestCount, setGuestCount] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
+  
+  // Connect to real-time updates
+  const { registerGuestUpdateHandler } = useRealTime();
   
   // Load initial value from storage on mount
   useEffect(() => {
@@ -38,11 +43,27 @@ const GuestCounter = ({ maxGuests = 10, defaultValue = 0 }: GuestCounterProps) =
     };
   }, []);
   
+  // Register for real-time updates
+  useEffect(() => {
+    // Handle real-time guest updates from other clients
+    const unregister = registerGuestUpdateHandler((data) => {
+      console.log(`Real-time update for guest count:`, data.count);
+      setGuestCount(data.count);
+      
+      // Add animation effect to highlight the change
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 700);
+    });
+    
+    return unregister;
+  }, [registerGuestUpdateHandler]);
+  
   // Handle value changes
   const handleChange = async (count: number) => {
     if (count >= 0 && count <= maxGuests) {
       setGuestCount(count);
       try {
+        // This will trigger real-time updates to other clients
         await storage.setAdditionalGuestCount(count);
       } catch (error) {
         console.error('Failed to update guest count:', error);
@@ -60,6 +81,7 @@ const GuestCounter = ({ maxGuests = 10, defaultValue = 0 }: GuestCounterProps) =
   const resetGuestCount = async () => {
     try {
       setIsLoading(true);
+      // This will trigger real-time updates to other clients
       await storage.resetAdditionalGuestCount();
       setGuestCount(0);
     } catch (error) {
@@ -70,7 +92,7 @@ const GuestCounter = ({ maxGuests = 10, defaultValue = 0 }: GuestCounterProps) =
   };
   
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-slate-200 w-full max-w-2xl transition-all duration-300 hover:shadow-xl mb-8">
+    <div className={`bg-white p-6 rounded-lg shadow-md border border-slate-200 w-full max-w-2xl transition-all duration-300 hover:shadow-xl mb-8 ${isAnimating ? 'bg-amber-50' : ''}`}>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
         <h2 className="font-medium text-xl text-slate-700 flex items-center">
           <svg className="w-5 h-5 mr-2 text-amber-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">

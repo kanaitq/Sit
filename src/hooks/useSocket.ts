@@ -2,23 +2,13 @@ import { useEffect, useState, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { StoreEvents } from '~/lib/db';
 
-// Define event handler types
-export type SeatUpdatedEvent = { position: string; selected: boolean };
-export type FoodUpdatedEvent = { id: string; selected: boolean };
-export type GuestUpdatedEvent = { count: number; lastReset: Date };
+export type SeatUpdateData = { position: string; selected: boolean };
+export type FoodUpdateData = { id: string; selected: boolean };
+export type GuestUpdateData = { count: number; lastReset: string };
 
-type SocketEventHandlers = {
-  onSeatUpdated?: (data: SeatUpdatedEvent) => void;
-  onSeatReset?: () => void;
-  onFoodUpdated?: (data: FoodUpdatedEvent) => void;
-  onFoodReset?: () => void;
-  onGuestUpdated?: (data: GuestUpdatedEvent) => void;
-  onGuestReset?: (data: GuestUpdatedEvent) => void;
-  onFullReset?: () => void;
-};
-
-export const useSocket = (handlers: SocketEventHandlers = {}) => {
+export const useSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
+  const [connectError, setConnectError] = useState<Error | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -26,59 +16,59 @@ export const useSocket = (handlers: SocketEventHandlers = {}) => {
     const initSocket = async () => {
       try {
         // Make sure the socket server is running
-        await fetch('/api/socket');
+        console.log('Initializing socket connection...');
+        const response = await fetch('/api/socketio');
+        const data = await response.json();
+        console.log('Socket server ready:', data);
         
         // Connect to the socket
         const socket = io({
           path: '/api/socketio',
+          transports: ['websocket', 'polling'],
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000,
         });
         socketRef.current = socket;
 
         // Connection event handlers
         socket.on('connect', () => {
-          console.log('Socket connected:', socket.id);
+          console.log('Socket connected successfully:', socket.id);
           setIsConnected(true);
+          setConnectError(null);
         });
 
-        socket.on('disconnect', () => {
-          console.log('Socket disconnected');
+        socket.on('connect_error', (error) => {
+          console.error('Socket connection error:', error);
+          setConnectError(error);
+        });
+
+        socket.on('disconnect', (reason) => {
+          console.log('Socket disconnected:', reason);
           setIsConnected(false);
         });
 
         socket.on('error', (error) => {
           console.error('Socket error:', error);
         });
+        
+        // Map DB event names to socket.io event names
+        socket.on(StoreEvents.SEAT_UPDATED, (data) => {
+          console.log('Forwarding seat update to clients:', data);
+          socket.emit('seat-update', data);
+        });
 
-        // Event handlers for real-time updates
-        if (handlers.onSeatUpdated) {
-          socket.on(StoreEvents.SEAT_UPDATED, handlers.onSeatUpdated);
-        }
+        socket.on(StoreEvents.FOOD_UPDATED, (data) => {
+          console.log('Forwarding food update to clients:', data);
+          socket.emit('food-update', data);
+        });
 
-        if (handlers.onSeatReset) {
-          socket.on(StoreEvents.SEAT_RESET, handlers.onSeatReset);
-        }
-
-        if (handlers.onFoodUpdated) {
-          socket.on(StoreEvents.FOOD_UPDATED, handlers.onFoodUpdated);
-        }
-
-        if (handlers.onFoodReset) {
-          socket.on(StoreEvents.FOOD_RESET, handlers.onFoodReset);
-        }
-
-        if (handlers.onGuestUpdated) {
-          socket.on(StoreEvents.GUEST_UPDATED, handlers.onGuestUpdated);
-        }
-
-        if (handlers.onGuestReset) {
-          socket.on(StoreEvents.GUEST_RESET, handlers.onGuestReset);
-        }
-
-        if (handlers.onFullReset) {
-          socket.on(StoreEvents.FULL_RESET, handlers.onFullReset);
-        }
+        socket.on(StoreEvents.GUEST_UPDATED, (data) => {
+          console.log('Forwarding guest update to clients:', data);
+          socket.emit('guest-update', data);
+        });
       } catch (error) {
         console.error("Failed to initialize socket:", error);
+        setConnectError(error instanceof Error ? error : new Error(String(error)));
       }
     };
 
@@ -92,18 +82,11 @@ export const useSocket = (handlers: SocketEventHandlers = {}) => {
         socketRef.current.disconnect();
       }
     };
-  }, [
-    handlers.onSeatUpdated,
-    handlers.onSeatReset,
-    handlers.onFoodUpdated,
-    handlers.onFoodReset,
-    handlers.onGuestUpdated,
-    handlers.onGuestReset,
-    handlers.onFullReset
-  ]);
+  }, []);
 
   return {
     isConnected,
+    connectError,
     socket: socketRef.current
   };
 }; 
