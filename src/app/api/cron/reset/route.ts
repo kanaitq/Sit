@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '~/lib/db';
+import { db } from '~/lib/db';
 
 // This endpoint will be called by a Vercel cron job at midnight Singapore time
 export async function GET(request: Request) {
@@ -14,25 +14,16 @@ export async function GET(request: Request) {
   
   try {
     // Reset all food selections
-    await prisma.foodOption.updateMany({
-      data: { selected: false },
-    });
+    await db.food.reset();
     
     // Reset all seat selections
-    await prisma.seatSelection.updateMany({
-      data: { selected: false },
-    });
+    await db.seats.reset();
     
-    // Update the reset tracker
-    const now = new Date();
-    await prisma.resetTracker.upsert({
-      where: { id: 'singleton' },
-      update: { lastReset: now },
-      create: { id: 'singleton', lastReset: now },
-    });
+    // Reset guest count and get the latest reset time
+    const guestData = await db.guests.reset();
     
-    console.log('Midnight reset completed at:', now.toISOString());
-    return NextResponse.json({ success: true, resetTime: now });
+    console.log('Midnight reset completed at:', guestData.lastReset.toISOString());
+    return NextResponse.json({ success: true, resetTime: guestData.lastReset });
   } catch (error) {
     console.error('Error performing scheduled reset:', error);
     return NextResponse.json({ error: 'Failed to perform scheduled reset' }, { status: 500 });

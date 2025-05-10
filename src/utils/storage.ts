@@ -173,7 +173,9 @@ export const storage = {
     
     try {
       // Then try API
-      await storage.retryFetch('/api/seats/reset', { method: 'PUT' });
+      await storage.retryFetch('/api/seats', {
+        method: 'PUT',
+      });
     } catch (error) {
       console.log('API unavailable for clearing seats');
     }

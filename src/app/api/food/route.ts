@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '~/lib/db';
+import { db } from '~/lib/db';
 
 // GET /api/food - Get all food options
 export async function GET() {
   try {
-    const foodOptions = await prisma.foodOption.findMany();
+    const foodOptions = await db.food.getAll();
     return NextResponse.json(foodOptions);
   } catch (error) {
     console.error('Error fetching food options:', error);
@@ -21,10 +21,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Food option ID is required' }, { status: 400 });
     }
     
-    const updatedOption = await prisma.foodOption.update({
-      where: { id },
-      data: { selected },
-    });
+    const updatedOption = await db.food.update(id, selected);
     
     return NextResponse.json(updatedOption);
   } catch (error) {
@@ -36,9 +33,7 @@ export async function POST(request: Request) {
 // PUT /api/food/reset - Reset all food selections
 export async function PUT() {
   try {
-    await prisma.foodOption.updateMany({
-      data: { selected: false },
-    });
+    await db.food.reset();
     
     return NextResponse.json({ success: true });
   } catch (error) {

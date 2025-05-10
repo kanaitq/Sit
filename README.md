@@ -1,95 +1,122 @@
-# Food Selection App
+# Seating Application
 
-A web application for managing food selections and seat assignments with offline support.
+A Next.js application for managing seat and food selections for guests, with features like a real-time guest counter, interactive seat selection, food preferences selection, and daily automatic reset.
 
 ## Features
 
-- Seat selection with interactive UI
-- Food option selection
-- Automatic midnight reset
-- Works offline with localStorage fallback
-- Error handling and recovery
-- Singapore time display
+- **Interactive Seat Selection**: Users can select/deselect seats around a virtual table
+- **Food Preferences**: Selection of food options with visual feedback
+- **Real-time Guest Counter**: Track additional guests beyond those seated
+- **Automatic Reset**: Cron job resets selections daily at midnight (Singapore time)
+- **Responsive Design**: Works on mobile and desktop devices
+- **Offline Capability**: Fallback to localStorage when offline
 
-## Development
+## Technical Architecture
 
-### Prerequisites
+### Frontend
 
-- Node.js 16+ and npm
+- Next.js 14 (App Router)
+- React components with memoization for performance
+- Tailwind CSS for styling
+- Client-side state management with localStorage backup
 
-### Setup
+### Backend
 
-1. Clone the repository
-2. Navigate to the project directory
-3. Install dependencies:
+- Next.js API routes (database-independent)
+- Vercel Cron for scheduled resets
+
+### Data Layer
+
+The application uses a database-independent approach through an abstraction layer:
+
+#### Data Access Layer (`lib/db.ts`)
+
+The heart of our database independence is the `db` object that provides a consistent interface for data operations:
+
+```typescript
+export const db = {
+  food: {
+    getAll: () => {...},
+    update: (id, selected) => {...},
+    reset: () => {...}
+  },
+  seats: {
+    getAll: () => {...},
+    update: (position, selected) => {...},
+    reset: () => {...}
+  },
+  guests: {
+    get: () => {...},
+    update: (count) => {...},
+    reset: () => {...}
+  }
+}
+```
+
+This allows the application to work with any database backend by simply implementing these interfaces.
+
+## API Endpoints
+
+### `/api/seats`
+- `GET` - Retrieves all seat selections
+- `POST` - Updates a seat selection status
+- `PUT` - Resets all seat selections
+
+### `/api/food`
+- `GET` - Retrieves all food options with selection status
+- `POST` - Updates a food option's selection status
+- `PUT` - Resets all food selections
+
+### `/api/guests`
+- `GET` - Retrieves current guest count and last reset time
+- `POST` - Updates the guest count
+
+### `/api/guests/reset`
+- `PUT` - Resets the guest count to 0
+
+### `/api/reset`
+- `GET` - Retrieves the last reset time
+- `POST` - Performs a complete reset of all data
+
+### `/api/cron/reset`
+- `GET` - Automatic reset endpoint called by Vercel Cron
+
+## Database Independence
+
+The application implements a database-independent architecture:
+
+1. **Abstraction Layer**: All database operations go through the `db` object in `lib/db.ts`
+2. **Memory Store**: The current implementation uses an in-memory store with the following structure:
+   ```typescript
+   const memoryStore = {
+     foodOptions: new Map<string, FoodOption>(),
+     seatSelections: new Map<string, boolean>(),
+     guestData: { count: 0, lastReset: new Date().toISOString() }
+   }
+   ```
+3. **API Routes**: All API routes use the `db` object instead of directly accessing any database
+4. **Frontend Storage**: The `storage.ts` utility provides client-side caching and localStorage fallback
+
+To switch databases, only the implementation of the `db` object functions needs to change, while the rest of the application remains the same.
+
+## Local Development
 
 ```bash
 npm install
-```
-
-### Running the Development Server
-
-#### Windows (PowerShell or Command Prompt)
-
-You can use one of the following methods:
-
-1. Using the Command Prompt launcher (simplest option):
-```
-run-dev.cmd
-```
-
-2. Using the PowerShell script:
-```powershell
-.\dev.ps1
-```
-
-3. Using the batch file:
-```
-.\dev.bat
-```
-
-4. Using separate commands (if you have issues with the scripts):
-```powershell
-cd seating
 npm run dev
 ```
 
-#### macOS/Linux
+## Deployment
 
-You can use one of the following methods:
+The application is ready to be deployed on Vercel with the following features:
 
-1. Using the shell script (simplest option):
-```bash
-chmod +x run-dev.sh  # Make it executable (first time only)
-./run-dev.sh
-```
+1. Push to GitHub
+2. Connect to Vercel
+3. Set up a Cron job for `/api/cron/reset` to run at midnight Singapore time
 
-2. Using separate commands:
-```bash
-cd seating
-npm run dev
-```
+## Environment Variables
 
-### Building for Production
-
-```bash
-npm run build
-```
-
-### Running in Production Mode
-
-```bash
-npm start
-```
-
-## Offline Functionality
-
-The application is designed to work offline by:
-
-1. First attempting to use the API endpoints
-2. Falling back to localStorage if API calls fail
-3. Showing network status indicators
-4. Automatically syncing when back online
+- `RESET_AUTH_TOKEN` - Token for authorizing cron job resets (required in production)
 
 ## Error Handling
 

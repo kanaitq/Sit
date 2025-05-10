@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '~/lib/db';
+import { db } from '~/lib/db';
 
 // GET /api/seats - Get all seat selections
 export async function GET() {
   try {
-    const seatSelections = await prisma.seatSelection.findMany();
+    const seatSelections = await db.seats.getAll();
     return NextResponse.json(seatSelections);
   } catch (error) {
     console.error('Error fetching seat selections:', error);
@@ -21,11 +21,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Seat position is required' }, { status: 400 });
     }
     
-    const updatedSeat = await prisma.seatSelection.upsert({
-      where: { position },
-      update: { selected },
-      create: { position, selected },
-    });
+    const updatedSeat = await db.seats.update(position, selected);
     
     return NextResponse.json(updatedSeat);
   } catch (error) {
@@ -37,9 +33,7 @@ export async function POST(request: Request) {
 // PUT /api/seats/reset - Reset all seat selections
 export async function PUT() {
   try {
-    await prisma.seatSelection.updateMany({
-      data: { selected: false },
-    });
+    await db.seats.reset();
     
     return NextResponse.json({ success: true });
   } catch (error) {
