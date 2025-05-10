@@ -1,10 +1,9 @@
 /**
  * This file provides a database-independent implementation
- * that works with or without a real database connection.
- * It falls back to in-memory state when Prisma is not available.
+ * that works with an in-memory data store.
  */
 
-// In-memory fallback data store
+// In-memory data store
 const memoryStore = {
   guestCount: 0,
   lastReset: new Date(),
@@ -41,15 +40,12 @@ for (const position of seatPositions) {
   memoryStore.seatSelections.set(position, false);
 }
 
-// Singleton pattern for database instance
-let dbInstance: any = null;
-
 // Helper to determine if today is a new day compared to stored date
 const isNewDay = (storedDate: Date): boolean => {
   return new Date().toDateString() !== storedDate.toDateString();
 };
 
-// Database interface - works with or without Prisma
+// Database interface
 export const db = {
   // Guest count operations
   guests: {
