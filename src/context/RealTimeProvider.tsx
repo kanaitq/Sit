@@ -14,8 +14,19 @@ type RealTimeContextType = {
   registerResetHandler: (handler: () => void) => () => void;
 };
 
+// Create the context with default values
+const defaultContextValue: RealTimeContextType = {
+  isConnected: false,
+  lastUpdate: null,
+  connectionStatus: 'connecting',
+  registerSeatUpdateHandler: () => () => {},
+  registerFoodUpdateHandler: () => () => {},
+  registerGuestUpdateHandler: () => () => {},
+  registerResetHandler: () => () => {},
+};
+
 // Create the context
-const RealTimeContext = createContext<RealTimeContextType | undefined>(undefined);
+const RealTimeContext = createContext<RealTimeContextType>(defaultContextValue);
 
 // Event handler registrations
 type HandlerRegistry<T> = Set<(data: T) => void>;
@@ -23,6 +34,7 @@ type HandlerRegistry<T> = Set<(data: T) => void>;
 export const RealTimeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('connecting');
+  const [error, setError] = useState<Error | null>(null);
   
   // Create handler registries
   const seatUpdateHandlers = React.useRef<HandlerRegistry<SeatUpdatedEvent>>(new Set());
@@ -30,47 +42,75 @@ export const RealTimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const guestUpdateHandlers = React.useRef<HandlerRegistry<GuestUpdatedEvent>>(new Set());
   const resetHandlers = React.useRef<HandlerRegistry<void>>(new Set());
   
-  // Socket event handlers
+  // Socket event handlers with error handling
   const handleSeatUpdated = useCallback((data: SeatUpdatedEvent) => {
-    console.log('Seat updated via socket:', data);
-    setLastUpdate(new Date());
-    seatUpdateHandlers.current.forEach(handler => handler(data));
+    try {
+      console.log('Seat updated via socket:', data);
+      setLastUpdate(new Date());
+      seatUpdateHandlers.current.forEach(handler => handler(data));
+    } catch (err) {
+      console.error('Error handling seat update:', err);
+    }
   }, []);
   
   const handleSeatReset = useCallback(() => {
-    console.log('Seats reset via socket');
-    setLastUpdate(new Date());
-    resetHandlers.current.forEach(handler => handler());
+    try {
+      console.log('Seats reset via socket');
+      setLastUpdate(new Date());
+      resetHandlers.current.forEach(handler => handler());
+    } catch (err) {
+      console.error('Error handling seat reset:', err);
+    }
   }, []);
   
   const handleFoodUpdated = useCallback((data: FoodUpdatedEvent) => {
-    console.log('Food updated via socket:', data);
-    setLastUpdate(new Date());
-    foodUpdateHandlers.current.forEach(handler => handler(data));
+    try {
+      console.log('Food updated via socket:', data);
+      setLastUpdate(new Date());
+      foodUpdateHandlers.current.forEach(handler => handler(data));
+    } catch (err) {
+      console.error('Error handling food update:', err);
+    }
   }, []);
   
   const handleFoodReset = useCallback(() => {
-    console.log('Food reset via socket');
-    setLastUpdate(new Date());
-    resetHandlers.current.forEach(handler => handler());
+    try {
+      console.log('Food reset via socket');
+      setLastUpdate(new Date());
+      resetHandlers.current.forEach(handler => handler());
+    } catch (err) {
+      console.error('Error handling food reset:', err);
+    }
   }, []);
   
   const handleGuestUpdated = useCallback((data: GuestUpdatedEvent) => {
-    console.log('Guest count updated via socket:', data);
-    setLastUpdate(new Date());
-    guestUpdateHandlers.current.forEach(handler => handler(data));
+    try {
+      console.log('Guest count updated via socket:', data);
+      setLastUpdate(new Date());
+      guestUpdateHandlers.current.forEach(handler => handler(data));
+    } catch (err) {
+      console.error('Error handling guest update:', err);
+    }
   }, []);
   
   const handleGuestReset = useCallback((data: GuestUpdatedEvent) => {
-    console.log('Guest count reset via socket:', data);
-    setLastUpdate(new Date());
-    resetHandlers.current.forEach(handler => handler());
+    try {
+      console.log('Guest count reset via socket:', data);
+      setLastUpdate(new Date());
+      resetHandlers.current.forEach(handler => handler());
+    } catch (err) {
+      console.error('Error handling guest reset:', err);
+    }
   }, []);
   
   const handleFullReset = useCallback(() => {
-    console.log('Full reset via socket');
-    setLastUpdate(new Date());
-    resetHandlers.current.forEach(handler => handler());
+    try {
+      console.log('Full reset via socket');
+      setLastUpdate(new Date());
+      resetHandlers.current.forEach(handler => handler());
+    } catch (err) {
+      console.error('Error handling full reset:', err);
+    }
   }, []);
   
   // Initialize socket with all our handlers
@@ -89,33 +129,53 @@ export const RealTimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setConnectionStatus(isConnected ? 'connected' : 'disconnected');
   }, [isConnected]);
   
-  // Handler registration functions
+  // Handler registration functions with error handling
   const registerSeatUpdateHandler = useCallback((handler: (data: SeatUpdatedEvent) => void) => {
-    seatUpdateHandlers.current.add(handler);
-    return () => {
-      seatUpdateHandlers.current.delete(handler);
-    };
+    try {
+      seatUpdateHandlers.current.add(handler);
+      return () => {
+        seatUpdateHandlers.current.delete(handler);
+      };
+    } catch (err) {
+      console.error('Error registering seat update handler:', err);
+      return () => {};
+    }
   }, []);
   
   const registerFoodUpdateHandler = useCallback((handler: (data: FoodUpdatedEvent) => void) => {
-    foodUpdateHandlers.current.add(handler);
-    return () => {
-      foodUpdateHandlers.current.delete(handler);
-    };
+    try {
+      foodUpdateHandlers.current.add(handler);
+      return () => {
+        foodUpdateHandlers.current.delete(handler);
+      };
+    } catch (err) {
+      console.error('Error registering food update handler:', err);
+      return () => {};
+    }
   }, []);
   
   const registerGuestUpdateHandler = useCallback((handler: (data: GuestUpdatedEvent) => void) => {
-    guestUpdateHandlers.current.add(handler);
-    return () => {
-      guestUpdateHandlers.current.delete(handler);
-    };
+    try {
+      guestUpdateHandlers.current.add(handler);
+      return () => {
+        guestUpdateHandlers.current.delete(handler);
+      };
+    } catch (err) {
+      console.error('Error registering guest update handler:', err);
+      return () => {};
+    }
   }, []);
   
   const registerResetHandler = useCallback((handler: () => void) => {
-    resetHandlers.current.add(handler);
-    return () => {
-      resetHandlers.current.delete(handler);
-    };
+    try {
+      resetHandlers.current.add(handler);
+      return () => {
+        resetHandlers.current.delete(handler);
+      };
+    } catch (err) {
+      console.error('Error registering reset handler:', err);
+      return () => {};
+    }
   }, []);
   
   // Create context value
@@ -136,11 +196,13 @@ export const RealTimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-// Custom hook to use the real-time context
+// Custom hook to use the real-time context with error handling
 export const useRealTime = () => {
-  const context = useContext(RealTimeContext);
-  if (context === undefined) {
-    throw new Error('useRealTime must be used within a RealTimeProvider');
+  try {
+    const context = useContext(RealTimeContext);
+    return context;
+  } catch (error) {
+    console.error('Error using RealTime context:', error);
+    return defaultContextValue;
   }
-  return context;
 }; 

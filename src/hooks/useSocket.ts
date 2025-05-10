@@ -24,63 +24,66 @@ export const useSocket = (handlers: SocketEventHandlers = {}) => {
   useEffect(() => {
     // Initialize socket connection
     const initSocket = async () => {
-      // Make sure the socket server is running
-      await fetch('/api/socket');
-      
-      // Connect to the socket
-      const socket = io({
-        path: '/api/socket',
-        addTrailingSlash: false,
-      });
-      socketRef.current = socket;
+      try {
+        // Make sure the socket server is running
+        await fetch('/api/socket');
+        
+        // Connect to the socket
+        const socket = io({
+          path: '/api/socketio',
+        });
+        socketRef.current = socket;
 
-      // Connection event handlers
-      socket.on('connect', () => {
-        console.log('Socket connected:', socket.id);
-        setIsConnected(true);
-      });
+        // Connection event handlers
+        socket.on('connect', () => {
+          console.log('Socket connected:', socket.id);
+          setIsConnected(true);
+        });
 
-      socket.on('disconnect', () => {
-        console.log('Socket disconnected');
-        setIsConnected(false);
-      });
+        socket.on('disconnect', () => {
+          console.log('Socket disconnected');
+          setIsConnected(false);
+        });
 
-      socket.on('error', (error) => {
-        console.error('Socket error:', error);
-      });
+        socket.on('error', (error) => {
+          console.error('Socket error:', error);
+        });
 
-      // Event handlers for real-time updates
-      if (handlers.onSeatUpdated) {
-        socket.on(StoreEvents.SEAT_UPDATED, handlers.onSeatUpdated);
-      }
+        // Event handlers for real-time updates
+        if (handlers.onSeatUpdated) {
+          socket.on(StoreEvents.SEAT_UPDATED, handlers.onSeatUpdated);
+        }
 
-      if (handlers.onSeatReset) {
-        socket.on(StoreEvents.SEAT_RESET, handlers.onSeatReset);
-      }
+        if (handlers.onSeatReset) {
+          socket.on(StoreEvents.SEAT_RESET, handlers.onSeatReset);
+        }
 
-      if (handlers.onFoodUpdated) {
-        socket.on(StoreEvents.FOOD_UPDATED, handlers.onFoodUpdated);
-      }
+        if (handlers.onFoodUpdated) {
+          socket.on(StoreEvents.FOOD_UPDATED, handlers.onFoodUpdated);
+        }
 
-      if (handlers.onFoodReset) {
-        socket.on(StoreEvents.FOOD_RESET, handlers.onFoodReset);
-      }
+        if (handlers.onFoodReset) {
+          socket.on(StoreEvents.FOOD_RESET, handlers.onFoodReset);
+        }
 
-      if (handlers.onGuestUpdated) {
-        socket.on(StoreEvents.GUEST_UPDATED, handlers.onGuestUpdated);
-      }
+        if (handlers.onGuestUpdated) {
+          socket.on(StoreEvents.GUEST_UPDATED, handlers.onGuestUpdated);
+        }
 
-      if (handlers.onGuestReset) {
-        socket.on(StoreEvents.GUEST_RESET, handlers.onGuestReset);
-      }
+        if (handlers.onGuestReset) {
+          socket.on(StoreEvents.GUEST_RESET, handlers.onGuestReset);
+        }
 
-      if (handlers.onFullReset) {
-        socket.on(StoreEvents.FULL_RESET, handlers.onFullReset);
+        if (handlers.onFullReset) {
+          socket.on(StoreEvents.FULL_RESET, handlers.onFullReset);
+        }
+      } catch (error) {
+        console.error("Failed to initialize socket:", error);
       }
     };
 
     // Initialize the socket
-    initSocket().catch(console.error);
+    initSocket();
 
     // Cleanup on unmount
     return () => {
