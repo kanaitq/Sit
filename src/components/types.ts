@@ -10,4 +10,9 @@ export interface TableProps {
     name: string;
     position: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
   }[];
+}
+
+export interface GuestCounterProps {
+  maxGuests?: number;
+  defaultValue?: number;
 } 

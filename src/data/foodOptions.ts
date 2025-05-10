@@ -197,7 +197,7 @@ export const toggleOptionSelection = async (id: string): Promise<FoodOption[]> =
       
       foodOptionsCache = updatedOptions;
       saveToLocalStorage(updatedOptions);
-      return updatedOptions;
+  return updatedOptions;
     }
   } catch (error) {
     console.error('Error toggling food option:', error);
@@ -228,10 +228,10 @@ export const clearAllFoodSelections = async (): Promise<FoodOption[]> => {
     // Fallback to localStorage for development
     console.log('Using localStorage fallback for clearing food selections');
     const options = getFoodOptionsSync();
-    const updatedOptions = options.map(option => ({ ...option, selected: false }));
-    
+  const updatedOptions = options.map(option => ({ ...option, selected: false }));
+  
     foodOptionsCache = updatedOptions;
     saveToLocalStorage(updatedOptions);
-    return updatedOptions;
+  return updatedOptions;
   }
 }; 

@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  previewFeatures = ["deno"]
 }
 
 datasource db {
@@ -34,5 +35,12 @@ model SeatSelection {
 model ResetTracker {
   id        String   @id @default("singleton")
   lastReset DateTime
+  updatedAt DateTime @updatedAt
+}
+
+// Represents additional guests count
+model AdditionalGuests {
+  id        String   @id @default("singleton")
+  count     Int      @default(0)
   updatedAt DateTime @updatedAt
 }

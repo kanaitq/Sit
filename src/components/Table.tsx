@@ -5,6 +5,7 @@ import Seat from '~/components/Seat';
 import { storage } from '~/utils/storage';
 import type { TableProps } from './types';
 import FoodSelector from './FoodSelector';
+import GuestCounter from './GuestCounter';
 
 // Seeded random function to prevent hydration mismatch
 function seededRandom(seed: number) {
@@ -73,9 +74,49 @@ const Table: React.FC<TableProps> = ({ seats }) => {
   const clearAllSelections = useCallback(async () => {
     await storage.clearAllSeatSelections(positions);
     
+    // Also reset guest count to 0
+    await storage.resetAdditionalGuestCount();
+    
     // Force a refresh
     window.location.reload();
   }, [positions]);
+
+  // Get additional guests count - memoized to prevent recreating on each render
+  const [additionalGuests, setAdditionalGuests] = useState(0);
+  
+  const updateAdditionalGuests = useCallback(async () => {
+    try {
+      const count = await storage.getAdditionalGuestCount();
+      setAdditionalGuests(count);
+    } catch (error) {
+      console.error('Error fetching additional guests:', error);
+    }
+  }, []);
+  
+  // Update additional guests count on mount and when the value changes
+  useEffect(() => {
+    updateAdditionalGuests();
+    
+    // Listen for guest count changes
+    const handleGuestCountChange = () => {
+      updateAdditionalGuests();
+    };
+    
+    window.addEventListener('guestCountChanged', handleGuestCountChange);
+    
+    // Also poll for guest count changes
+    const guestInterval = setInterval(() => {
+      updateAdditionalGuests();
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener('guestCountChanged', handleGuestCountChange);
+      clearInterval(guestInterval);
+    };
+  }, [updateAdditionalGuests]);
+
+  // Calculate total headcount (selected seats + additional guests)
+  const totalHeadcount = selectedCount + additionalGuests;
 
   return (
     <div className="flex flex-col items-center justify-center p-4 sm:p-8 pt-8 sm:pt-16">
@@ -176,32 +217,48 @@ const Table: React.FC<TableProps> = ({ seats }) => {
         </div>
       </div>
       
+      {/* Additional Guests Counter - added between table and food selection */}
+      <GuestCounter maxGuests={10} />
+      
       <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg border border-slate-200 w-full max-w-2xl transition-all duration-300 hover:shadow-xl">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 sm:gap-0">
           <h2 className="font-medium text-xl text-slate-700 flex items-center">
-            <svg className="w-5 h-5 mr-2 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="w-5 h-5 mr-2 text-amber-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
               <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
               <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
             </svg>
             Food Selection
           </h2>
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            <div className="bg-slate-100 px-4 py-2 rounded-full text-sm font-medium text-slate-600 flex items-center flex-shrink-0">
-              <svg className="w-4 h-4 mr-1.5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+          
+          {/* Status indicators and actions */}
+          <div className="flex flex-wrap gap-2 justify-end w-full sm:w-auto">
+            <div className="bg-slate-100 px-3 py-2 rounded-full text-sm font-medium text-slate-600 flex items-center flex-shrink-0 whitespace-nowrap">
+              <svg className="w-4 h-4 mr-1.5 text-emerald-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>{selectedCount} of {seats.length} seats confirmed</span>
+              <span>{selectedCount} of {seats.length} seats</span>
             </div>
+            
+            {/* Total headcount indicator */}
+            {totalHeadcount > 0 && (
+              <div className="bg-emerald-100 px-3 py-2 rounded-full text-sm font-medium text-emerald-700 flex items-center flex-shrink-0 whitespace-nowrap">
+                <svg className="w-4 h-4 mr-1.5 text-emerald-600 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                </svg>
+                <span>Total: {totalHeadcount}</span>
+              </div>
+            )}
+            
             {selectedCount > 0 && (
               <button 
                 onClick={clearAllSelections}
-                className="text-sm text-red-500 hover:text-red-600 font-medium flex items-center px-3 py-1.5 rounded-md hover:bg-red-50 transition-colors duration-200 flex-shrink-0"
+                className="text-sm text-red-500 hover:text-red-600 font-medium flex items-center px-3 py-1.5 rounded-md hover:bg-red-50 transition-colors duration-200 flex-shrink-0 whitespace-nowrap"
               >
-                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-                Reset Seats
+                Reset All
               </button>
             )}
           </div>

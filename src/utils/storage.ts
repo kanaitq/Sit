@@ -260,5 +260,123 @@ export const storage = {
       }
     });
     return count;
+  },
+
+  // Helper for creating events with fallback for older browsers
+  createEvent: (eventName: string): Event => {
+    if (typeof window === 'undefined') return new Event(eventName);
+    
+    // Check if Event constructor is supported
+    if (typeof Event === 'function') {
+      return new Event(eventName);
+    } else {
+      // For IE and older browsers
+      const event = document.createEvent('Event');
+      event.initEvent(eventName, true, true);
+      return event;
+    }
+  },
+
+  // Add these functions for handling additional guests
+  setAdditionalGuestCount: async (count: number): Promise<void> => {
+    const cacheKey = 'additionalGuestCount';
+    
+    // Validate input
+    if (typeof count !== 'number' || count < 0) {
+      throw new Error('Invalid guest count: must be a non-negative number');
+    }
+    
+    // Update localStorage and cache immediately for responsive UI
+    storage.setItem(cacheKey, count.toString());
+    storage.setCached(cacheKey, count);
+    
+    // Dispatch event so other components can update
+    if (typeof window !== 'undefined') {
+      try {
+        window.dispatchEvent(storage.createEvent('guestCountChanged'));
+      } catch (error) {
+        console.warn('Could not dispatch event, falling back to polling', error);
+      }
+    }
+    
+    try {
+      // Then try API
+      await storage.retryFetch('/api/guests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count }),
+      });
+    } catch (error) {
+      console.log('API unavailable for setting guest count');
+    }
+  },
+
+  getAdditionalGuestCount: async (): Promise<number> => {
+    // Check memory cache first
+    const cacheKey = 'additionalGuestCount';
+    const cached = storage.getCached(cacheKey);
+    if (cached !== null) return cached;
+    
+    // Then check localStorage
+    const localValue = storage.getItem(cacheKey);
+    if (localValue !== null) {
+      const count = parseInt(localValue, 10);
+      storage.setCached(cacheKey, count);
+      return count;
+    }
+    
+    // Finally try API
+    try {
+      const response = await storage.retryFetch('/api/guests');
+      const data = await response.json();
+      
+      // Update cache and localStorage
+      const count = data.count || 0;
+      storage.setCached(cacheKey, count);
+      storage.setItem(cacheKey, count.toString());
+      
+      return count;
+    } catch (error) {
+      console.log('API unavailable for guest count');
+      return 0;
+    }
+  },
+  
+  getAdditionalGuestCountSync: (): number => {
+    if (typeof window === 'undefined') return 0;
+    
+    // Check memory cache first
+    const cacheKey = 'additionalGuestCount';
+    const cached = storage.getCached(cacheKey);
+    if (cached !== null) return cached;
+    
+    // Then check localStorage
+    const localValue = storage.getItem(cacheKey);
+    return localValue ? parseInt(localValue, 10) : 0;
+  },
+
+  // Add reset functionality for additional guests
+  resetAdditionalGuestCount: async (): Promise<void> => {
+    const cacheKey = 'additionalGuestCount';
+    
+    // Update localStorage and cache immediately
+    storage.setItem(cacheKey, '0');
+    storage.setCached(cacheKey, 0);
+    
+    // Dispatch event for UI updates
+    if (typeof window !== 'undefined') {
+      try {
+        window.dispatchEvent(storage.createEvent('guestCountChanged'));
+      } catch (error) {
+        console.warn('Could not dispatch event, falling back to polling', error);
+      }
+    }
+    
+    try {
+      // Then try API
+      await storage.retryFetch('/api/guests/reset', { method: 'PUT' });
+    } catch (error) {
+      console.log('API unavailable for resetting guest count');
+    }
   }
 }; 

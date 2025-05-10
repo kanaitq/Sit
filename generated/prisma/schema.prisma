@@ -36,3 +36,10 @@ model ResetTracker {
   lastReset DateTime
   updatedAt DateTime @updatedAt
 }
+
+// Represents additional guests count
+model AdditionalGuests {
+  id        String   @id @default("singleton")
+  count     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}

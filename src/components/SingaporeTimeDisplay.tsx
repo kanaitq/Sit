@@ -141,9 +141,9 @@ const SingaporeTimeDisplay = () => {
       <div className="text-lg sm:text-xl md:text-2xl font-medium text-slate-700 mb-1 sm:mb-2">Loading date...</div>
       <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-amber-600 mt-2 sm:mt-3 md:mt-4 mb-2 sm:mb-3 md:mb-4">Loading time...</div>
       <div className="text-xs sm:text-sm text-amber-600 font-medium mt-2 sm:mt-3 py-1 sm:py-2">
-        Tonight's selections only. Auto-reset at midnight.
+          Tonight's selections only. Auto-reset at midnight.
+        </div>
       </div>
-    </div>
   ), []);
   
   if (!isMounted) {

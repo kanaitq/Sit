@@ -140,6 +140,12 @@ exports.Prisma.ResetTrackerScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AdditionalGuestsScalarFieldEnum = {
+  id: 'id',
+  count: 'count',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -154,7 +160,8 @@ exports.Prisma.QueryMode = {
 exports.Prisma.ModelName = {
   FoodOption: 'FoodOption',
   SeatSelection: 'SeatSelection',
-  ResetTracker: 'ResetTracker'
+  ResetTracker: 'ResetTracker',
+  AdditionalGuests: 'AdditionalGuests'
 };
 
 /**

@@ -10,20 +10,20 @@ import NetworkStatus from './NetworkStatus';
 // Import components with dynamic imports in a client component
 // Optimize loading state by memoizing it
 const loadingTablePlaceholder = (
-  <div className="w-full flex justify-center my-12">
-    <div className="w-[700px] h-[450px] bg-slate-100 rounded-lg animate-pulse"></div>
-  </div>
+    <div className="w-full flex justify-center my-12">
+      <div className="w-[700px] h-[450px] bg-slate-100 rounded-lg animate-pulse"></div>
+    </div>
 );
 
 const loadingTimePlaceholder = (
-  <div className="my-16 py-8 flex flex-col items-center">
-    <h1 className="text-4xl font-bold text-slate-800 mb-6">Food Selection</h1>
-    <div className="text-2xl font-medium text-slate-700 mb-2">Loading date...</div>
-    <div className="text-5xl font-bold text-amber-600 mt-4 mb-4">Loading time...</div>
-    <div className="text-sm text-amber-600 font-medium mt-3 py-2">
-      Tonight's selections only. Auto-reset at midnight.
+    <div className="my-16 py-8 flex flex-col items-center">
+      <h1 className="text-4xl font-bold text-slate-800 mb-6">Food Selection</h1>
+      <div className="text-2xl font-medium text-slate-700 mb-2">Loading date...</div>
+      <div className="text-5xl font-bold text-amber-600 mt-4 mb-4">Loading time...</div>
+      <div className="text-sm text-amber-600 font-medium mt-3 py-2">
+        Tonight's selections only. Auto-reset at midnight.
+      </div>
     </div>
-  </div>
 );
 
 // Use dynamic imports with reduced loading states
@@ -98,8 +98,8 @@ function DynamicContentWrapper({ seats }: DynamicContentWrapperProps) {
 
   // Memoize the time display error fallback
   const timeDisplayErrorFallback = (
-    <div className="my-16 py-8 flex flex-col items-center">
-      <h1 className="text-4xl font-bold text-slate-800 mb-6">Food Selection</h1>
+          <div className="my-16 py-8 flex flex-col items-center">
+            <h1 className="text-4xl font-bold text-slate-800 mb-6">Food Selection</h1>
       <div className="text-2xl font-medium text-slate-700 mb-2">Error loading time display</div>
       <button 
         className="mt-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
@@ -107,7 +107,7 @@ function DynamicContentWrapper({ seats }: DynamicContentWrapperProps) {
       >
         Reload
       </button>
-    </div>
+            </div>
   );
 
   // Memoize the table error fallback
@@ -121,26 +121,26 @@ function DynamicContentWrapper({ seats }: DynamicContentWrapperProps) {
       >
         Retry
       </button>
-    </div>
-  );
+        </div>
+    );
 
   return (
     <>
       <header className="text-center mb-12">
         <ErrorBoundary fallback={timeDisplayErrorFallback}>
-          <SingaporeTimeDisplay />
+        <SingaporeTimeDisplay />
         </ErrorBoundary>
       </header>
       
       <ErrorBoundary fallback={tableErrorFallback}>
-        <ClientTableWrapper seats={seats} />
+      <ClientTableWrapper seats={seats} />
       </ErrorBoundary>
       
       {/* Network status indicator */}
       <NetworkStatus />
     </>
   );
-}
+} 
 
 // Memoize the entire component to prevent unnecessary re-renders
 export default memo(DynamicContentWrapper); 

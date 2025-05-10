@@ -28,6 +28,11 @@ export type SeatSelection = $Result.DefaultSelection<Prisma.$SeatSelectionPayloa
  * 
  */
 export type ResetTracker = $Result.DefaultSelection<Prisma.$ResetTrackerPayload>
+/**
+ * Model AdditionalGuests
+ * 
+ */
+export type AdditionalGuests = $Result.DefaultSelection<Prisma.$AdditionalGuestsPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -183,6 +188,16 @@ export class PrismaClient<
     * ```
     */
   get resetTracker(): Prisma.ResetTrackerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.additionalGuests`: Exposes CRUD operations for the **AdditionalGuests** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdditionalGuests
+    * const additionalGuests = await prisma.additionalGuests.findMany()
+    * ```
+    */
+  get additionalGuests(): Prisma.AdditionalGuestsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -625,7 +640,8 @@ export namespace Prisma {
   export const ModelName: {
     FoodOption: 'FoodOption',
     SeatSelection: 'SeatSelection',
-    ResetTracker: 'ResetTracker'
+    ResetTracker: 'ResetTracker',
+    AdditionalGuests: 'AdditionalGuests'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -644,7 +660,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "foodOption" | "seatSelection" | "resetTracker"
+      modelProps: "foodOption" | "seatSelection" | "resetTracker" | "additionalGuests"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -870,6 +886,80 @@ export namespace Prisma {
           }
         }
       }
+      AdditionalGuests: {
+        payload: Prisma.$AdditionalGuestsPayload<ExtArgs>
+        fields: Prisma.AdditionalGuestsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdditionalGuestsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdditionalGuestsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>
+          }
+          findFirst: {
+            args: Prisma.AdditionalGuestsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdditionalGuestsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>
+          }
+          findMany: {
+            args: Prisma.AdditionalGuestsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>[]
+          }
+          create: {
+            args: Prisma.AdditionalGuestsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>
+          }
+          createMany: {
+            args: Prisma.AdditionalGuestsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdditionalGuestsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>[]
+          }
+          delete: {
+            args: Prisma.AdditionalGuestsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>
+          }
+          update: {
+            args: Prisma.AdditionalGuestsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdditionalGuestsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdditionalGuestsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdditionalGuestsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdditionalGuestsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdditionalGuestsPayload>
+          }
+          aggregate: {
+            args: Prisma.AdditionalGuestsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdditionalGuests>
+          }
+          groupBy: {
+            args: Prisma.AdditionalGuestsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdditionalGuestsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdditionalGuestsCountArgs<ExtArgs>
+            result: $Utils.Optional<AdditionalGuestsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -957,6 +1047,7 @@ export namespace Prisma {
     foodOption?: FoodOptionOmit
     seatSelection?: SeatSelectionOmit
     resetTracker?: ResetTrackerOmit
+    additionalGuests?: AdditionalGuestsOmit
   }
 
   /* Types for Logging */
@@ -3985,6 +4076,1009 @@ export namespace Prisma {
 
 
   /**
+   * Model AdditionalGuests
+   */
+
+  export type AggregateAdditionalGuests = {
+    _count: AdditionalGuestsCountAggregateOutputType | null
+    _avg: AdditionalGuestsAvgAggregateOutputType | null
+    _sum: AdditionalGuestsSumAggregateOutputType | null
+    _min: AdditionalGuestsMinAggregateOutputType | null
+    _max: AdditionalGuestsMaxAggregateOutputType | null
+  }
+
+  export type AdditionalGuestsAvgAggregateOutputType = {
+    count: number | null
+  }
+
+  export type AdditionalGuestsSumAggregateOutputType = {
+    count: number | null
+  }
+
+  export type AdditionalGuestsMinAggregateOutputType = {
+    id: string | null
+    count: number | null
+    updatedAt: Date | null
+  }
+
+  export type AdditionalGuestsMaxAggregateOutputType = {
+    id: string | null
+    count: number | null
+    updatedAt: Date | null
+  }
+
+  export type AdditionalGuestsCountAggregateOutputType = {
+    id: number
+    count: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AdditionalGuestsAvgAggregateInputType = {
+    count?: true
+  }
+
+  export type AdditionalGuestsSumAggregateInputType = {
+    count?: true
+  }
+
+  export type AdditionalGuestsMinAggregateInputType = {
+    id?: true
+    count?: true
+    updatedAt?: true
+  }
+
+  export type AdditionalGuestsMaxAggregateInputType = {
+    id?: true
+    count?: true
+    updatedAt?: true
+  }
+
+  export type AdditionalGuestsCountAggregateInputType = {
+    id?: true
+    count?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AdditionalGuestsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdditionalGuests to aggregate.
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdditionalGuests to fetch.
+     */
+    orderBy?: AdditionalGuestsOrderByWithRelationInput | AdditionalGuestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdditionalGuestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdditionalGuests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdditionalGuests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdditionalGuests
+    **/
+    _count?: true | AdditionalGuestsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AdditionalGuestsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AdditionalGuestsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdditionalGuestsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdditionalGuestsMaxAggregateInputType
+  }
+
+  export type GetAdditionalGuestsAggregateType<T extends AdditionalGuestsAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdditionalGuests]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdditionalGuests[P]>
+      : GetScalarType<T[P], AggregateAdditionalGuests[P]>
+  }
+
+
+
+
+  export type AdditionalGuestsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdditionalGuestsWhereInput
+    orderBy?: AdditionalGuestsOrderByWithAggregationInput | AdditionalGuestsOrderByWithAggregationInput[]
+    by: AdditionalGuestsScalarFieldEnum[] | AdditionalGuestsScalarFieldEnum
+    having?: AdditionalGuestsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdditionalGuestsCountAggregateInputType | true
+    _avg?: AdditionalGuestsAvgAggregateInputType
+    _sum?: AdditionalGuestsSumAggregateInputType
+    _min?: AdditionalGuestsMinAggregateInputType
+    _max?: AdditionalGuestsMaxAggregateInputType
+  }
+
+  export type AdditionalGuestsGroupByOutputType = {
+    id: string
+    count: number
+    updatedAt: Date
+    _count: AdditionalGuestsCountAggregateOutputType | null
+    _avg: AdditionalGuestsAvgAggregateOutputType | null
+    _sum: AdditionalGuestsSumAggregateOutputType | null
+    _min: AdditionalGuestsMinAggregateOutputType | null
+    _max: AdditionalGuestsMaxAggregateOutputType | null
+  }
+
+  type GetAdditionalGuestsGroupByPayload<T extends AdditionalGuestsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdditionalGuestsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdditionalGuestsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdditionalGuestsGroupByOutputType[P]>
+            : GetScalarType<T[P], AdditionalGuestsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdditionalGuestsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    count?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["additionalGuests"]>
+
+  export type AdditionalGuestsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    count?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["additionalGuests"]>
+
+  export type AdditionalGuestsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    count?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["additionalGuests"]>
+
+  export type AdditionalGuestsSelectScalar = {
+    id?: boolean
+    count?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AdditionalGuestsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "count" | "updatedAt", ExtArgs["result"]["additionalGuests"]>
+
+  export type $AdditionalGuestsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdditionalGuests"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      count: number
+      updatedAt: Date
+    }, ExtArgs["result"]["additionalGuests"]>
+    composites: {}
+  }
+
+  type AdditionalGuestsGetPayload<S extends boolean | null | undefined | AdditionalGuestsDefaultArgs> = $Result.GetResult<Prisma.$AdditionalGuestsPayload, S>
+
+  type AdditionalGuestsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdditionalGuestsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdditionalGuestsCountAggregateInputType | true
+    }
+
+  export interface AdditionalGuestsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdditionalGuests'], meta: { name: 'AdditionalGuests' } }
+    /**
+     * Find zero or one AdditionalGuests that matches the filter.
+     * @param {AdditionalGuestsFindUniqueArgs} args - Arguments to find a AdditionalGuests
+     * @example
+     * // Get one AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdditionalGuestsFindUniqueArgs>(args: SelectSubset<T, AdditionalGuestsFindUniqueArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdditionalGuests that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdditionalGuestsFindUniqueOrThrowArgs} args - Arguments to find a AdditionalGuests
+     * @example
+     * // Get one AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdditionalGuestsFindUniqueOrThrowArgs>(args: SelectSubset<T, AdditionalGuestsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdditionalGuests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsFindFirstArgs} args - Arguments to find a AdditionalGuests
+     * @example
+     * // Get one AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdditionalGuestsFindFirstArgs>(args?: SelectSubset<T, AdditionalGuestsFindFirstArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdditionalGuests that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsFindFirstOrThrowArgs} args - Arguments to find a AdditionalGuests
+     * @example
+     * // Get one AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdditionalGuestsFindFirstOrThrowArgs>(args?: SelectSubset<T, AdditionalGuestsFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdditionalGuests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.findMany()
+     * 
+     * // Get first 10 AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const additionalGuestsWithIdOnly = await prisma.additionalGuests.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdditionalGuestsFindManyArgs>(args?: SelectSubset<T, AdditionalGuestsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdditionalGuests.
+     * @param {AdditionalGuestsCreateArgs} args - Arguments to create a AdditionalGuests.
+     * @example
+     * // Create one AdditionalGuests
+     * const AdditionalGuests = await prisma.additionalGuests.create({
+     *   data: {
+     *     // ... data to create a AdditionalGuests
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdditionalGuestsCreateArgs>(args: SelectSubset<T, AdditionalGuestsCreateArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdditionalGuests.
+     * @param {AdditionalGuestsCreateManyArgs} args - Arguments to create many AdditionalGuests.
+     * @example
+     * // Create many AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdditionalGuestsCreateManyArgs>(args?: SelectSubset<T, AdditionalGuestsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdditionalGuests and returns the data saved in the database.
+     * @param {AdditionalGuestsCreateManyAndReturnArgs} args - Arguments to create many AdditionalGuests.
+     * @example
+     * // Create many AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdditionalGuests and only return the `id`
+     * const additionalGuestsWithIdOnly = await prisma.additionalGuests.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdditionalGuestsCreateManyAndReturnArgs>(args?: SelectSubset<T, AdditionalGuestsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdditionalGuests.
+     * @param {AdditionalGuestsDeleteArgs} args - Arguments to delete one AdditionalGuests.
+     * @example
+     * // Delete one AdditionalGuests
+     * const AdditionalGuests = await prisma.additionalGuests.delete({
+     *   where: {
+     *     // ... filter to delete one AdditionalGuests
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdditionalGuestsDeleteArgs>(args: SelectSubset<T, AdditionalGuestsDeleteArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdditionalGuests.
+     * @param {AdditionalGuestsUpdateArgs} args - Arguments to update one AdditionalGuests.
+     * @example
+     * // Update one AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdditionalGuestsUpdateArgs>(args: SelectSubset<T, AdditionalGuestsUpdateArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdditionalGuests.
+     * @param {AdditionalGuestsDeleteManyArgs} args - Arguments to filter AdditionalGuests to delete.
+     * @example
+     * // Delete a few AdditionalGuests
+     * const { count } = await prisma.additionalGuests.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdditionalGuestsDeleteManyArgs>(args?: SelectSubset<T, AdditionalGuestsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdditionalGuests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdditionalGuestsUpdateManyArgs>(args: SelectSubset<T, AdditionalGuestsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdditionalGuests and returns the data updated in the database.
+     * @param {AdditionalGuestsUpdateManyAndReturnArgs} args - Arguments to update many AdditionalGuests.
+     * @example
+     * // Update many AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdditionalGuests and only return the `id`
+     * const additionalGuestsWithIdOnly = await prisma.additionalGuests.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdditionalGuestsUpdateManyAndReturnArgs>(args: SelectSubset<T, AdditionalGuestsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdditionalGuests.
+     * @param {AdditionalGuestsUpsertArgs} args - Arguments to update or create a AdditionalGuests.
+     * @example
+     * // Update or create a AdditionalGuests
+     * const additionalGuests = await prisma.additionalGuests.upsert({
+     *   create: {
+     *     // ... data to create a AdditionalGuests
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdditionalGuests we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdditionalGuestsUpsertArgs>(args: SelectSubset<T, AdditionalGuestsUpsertArgs<ExtArgs>>): Prisma__AdditionalGuestsClient<$Result.GetResult<Prisma.$AdditionalGuestsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdditionalGuests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsCountArgs} args - Arguments to filter AdditionalGuests to count.
+     * @example
+     * // Count the number of AdditionalGuests
+     * const count = await prisma.additionalGuests.count({
+     *   where: {
+     *     // ... the filter for the AdditionalGuests we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdditionalGuestsCountArgs>(
+      args?: Subset<T, AdditionalGuestsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdditionalGuestsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdditionalGuests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdditionalGuestsAggregateArgs>(args: Subset<T, AdditionalGuestsAggregateArgs>): Prisma.PrismaPromise<GetAdditionalGuestsAggregateType<T>>
+
+    /**
+     * Group by AdditionalGuests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdditionalGuestsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdditionalGuestsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdditionalGuestsGroupByArgs['orderBy'] }
+        : { orderBy?: AdditionalGuestsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdditionalGuestsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdditionalGuestsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdditionalGuests model
+   */
+  readonly fields: AdditionalGuestsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdditionalGuests.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdditionalGuestsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdditionalGuests model
+   */
+  interface AdditionalGuestsFieldRefs {
+    readonly id: FieldRef<"AdditionalGuests", 'String'>
+    readonly count: FieldRef<"AdditionalGuests", 'Int'>
+    readonly updatedAt: FieldRef<"AdditionalGuests", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdditionalGuests findUnique
+   */
+  export type AdditionalGuestsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdditionalGuests to fetch.
+     */
+    where: AdditionalGuestsWhereUniqueInput
+  }
+
+  /**
+   * AdditionalGuests findUniqueOrThrow
+   */
+  export type AdditionalGuestsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdditionalGuests to fetch.
+     */
+    where: AdditionalGuestsWhereUniqueInput
+  }
+
+  /**
+   * AdditionalGuests findFirst
+   */
+  export type AdditionalGuestsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdditionalGuests to fetch.
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdditionalGuests to fetch.
+     */
+    orderBy?: AdditionalGuestsOrderByWithRelationInput | AdditionalGuestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdditionalGuests.
+     */
+    cursor?: AdditionalGuestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdditionalGuests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdditionalGuests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdditionalGuests.
+     */
+    distinct?: AdditionalGuestsScalarFieldEnum | AdditionalGuestsScalarFieldEnum[]
+  }
+
+  /**
+   * AdditionalGuests findFirstOrThrow
+   */
+  export type AdditionalGuestsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdditionalGuests to fetch.
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdditionalGuests to fetch.
+     */
+    orderBy?: AdditionalGuestsOrderByWithRelationInput | AdditionalGuestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdditionalGuests.
+     */
+    cursor?: AdditionalGuestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdditionalGuests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdditionalGuests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdditionalGuests.
+     */
+    distinct?: AdditionalGuestsScalarFieldEnum | AdditionalGuestsScalarFieldEnum[]
+  }
+
+  /**
+   * AdditionalGuests findMany
+   */
+  export type AdditionalGuestsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdditionalGuests to fetch.
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdditionalGuests to fetch.
+     */
+    orderBy?: AdditionalGuestsOrderByWithRelationInput | AdditionalGuestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdditionalGuests.
+     */
+    cursor?: AdditionalGuestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdditionalGuests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdditionalGuests.
+     */
+    skip?: number
+    distinct?: AdditionalGuestsScalarFieldEnum | AdditionalGuestsScalarFieldEnum[]
+  }
+
+  /**
+   * AdditionalGuests create
+   */
+  export type AdditionalGuestsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a AdditionalGuests.
+     */
+    data: XOR<AdditionalGuestsCreateInput, AdditionalGuestsUncheckedCreateInput>
+  }
+
+  /**
+   * AdditionalGuests createMany
+   */
+  export type AdditionalGuestsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdditionalGuests.
+     */
+    data: AdditionalGuestsCreateManyInput | AdditionalGuestsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdditionalGuests createManyAndReturn
+   */
+  export type AdditionalGuestsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdditionalGuests.
+     */
+    data: AdditionalGuestsCreateManyInput | AdditionalGuestsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdditionalGuests update
+   */
+  export type AdditionalGuestsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a AdditionalGuests.
+     */
+    data: XOR<AdditionalGuestsUpdateInput, AdditionalGuestsUncheckedUpdateInput>
+    /**
+     * Choose, which AdditionalGuests to update.
+     */
+    where: AdditionalGuestsWhereUniqueInput
+  }
+
+  /**
+   * AdditionalGuests updateMany
+   */
+  export type AdditionalGuestsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdditionalGuests.
+     */
+    data: XOR<AdditionalGuestsUpdateManyMutationInput, AdditionalGuestsUncheckedUpdateManyInput>
+    /**
+     * Filter which AdditionalGuests to update
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * Limit how many AdditionalGuests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdditionalGuests updateManyAndReturn
+   */
+  export type AdditionalGuestsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * The data used to update AdditionalGuests.
+     */
+    data: XOR<AdditionalGuestsUpdateManyMutationInput, AdditionalGuestsUncheckedUpdateManyInput>
+    /**
+     * Filter which AdditionalGuests to update
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * Limit how many AdditionalGuests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdditionalGuests upsert
+   */
+  export type AdditionalGuestsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the AdditionalGuests to update in case it exists.
+     */
+    where: AdditionalGuestsWhereUniqueInput
+    /**
+     * In case the AdditionalGuests found by the `where` argument doesn't exist, create a new AdditionalGuests with this data.
+     */
+    create: XOR<AdditionalGuestsCreateInput, AdditionalGuestsUncheckedCreateInput>
+    /**
+     * In case the AdditionalGuests was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdditionalGuestsUpdateInput, AdditionalGuestsUncheckedUpdateInput>
+  }
+
+  /**
+   * AdditionalGuests delete
+   */
+  export type AdditionalGuestsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+    /**
+     * Filter which AdditionalGuests to delete.
+     */
+    where: AdditionalGuestsWhereUniqueInput
+  }
+
+  /**
+   * AdditionalGuests deleteMany
+   */
+  export type AdditionalGuestsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdditionalGuests to delete
+     */
+    where?: AdditionalGuestsWhereInput
+    /**
+     * Limit how many AdditionalGuests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdditionalGuests without action
+   */
+  export type AdditionalGuestsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdditionalGuests
+     */
+    select?: AdditionalGuestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdditionalGuests
+     */
+    omit?: AdditionalGuestsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4025,6 +5119,15 @@ export namespace Prisma {
   };
 
   export type ResetTrackerScalarFieldEnum = (typeof ResetTrackerScalarFieldEnum)[keyof typeof ResetTrackerScalarFieldEnum]
+
+
+  export const AdditionalGuestsScalarFieldEnum: {
+    id: 'id',
+    count: 'count',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AdditionalGuestsScalarFieldEnum = (typeof AdditionalGuestsScalarFieldEnum)[keyof typeof AdditionalGuestsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4094,6 +5197,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -4236,6 +5353,50 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ResetTracker"> | Date | string
   }
 
+  export type AdditionalGuestsWhereInput = {
+    AND?: AdditionalGuestsWhereInput | AdditionalGuestsWhereInput[]
+    OR?: AdditionalGuestsWhereInput[]
+    NOT?: AdditionalGuestsWhereInput | AdditionalGuestsWhereInput[]
+    id?: StringFilter<"AdditionalGuests"> | string
+    count?: IntFilter<"AdditionalGuests"> | number
+    updatedAt?: DateTimeFilter<"AdditionalGuests"> | Date | string
+  }
+
+  export type AdditionalGuestsOrderByWithRelationInput = {
+    id?: SortOrder
+    count?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdditionalGuestsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AdditionalGuestsWhereInput | AdditionalGuestsWhereInput[]
+    OR?: AdditionalGuestsWhereInput[]
+    NOT?: AdditionalGuestsWhereInput | AdditionalGuestsWhereInput[]
+    count?: IntFilter<"AdditionalGuests"> | number
+    updatedAt?: DateTimeFilter<"AdditionalGuests"> | Date | string
+  }, "id">
+
+  export type AdditionalGuestsOrderByWithAggregationInput = {
+    id?: SortOrder
+    count?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AdditionalGuestsCountOrderByAggregateInput
+    _avg?: AdditionalGuestsAvgOrderByAggregateInput
+    _max?: AdditionalGuestsMaxOrderByAggregateInput
+    _min?: AdditionalGuestsMinOrderByAggregateInput
+    _sum?: AdditionalGuestsSumOrderByAggregateInput
+  }
+
+  export type AdditionalGuestsScalarWhereWithAggregatesInput = {
+    AND?: AdditionalGuestsScalarWhereWithAggregatesInput | AdditionalGuestsScalarWhereWithAggregatesInput[]
+    OR?: AdditionalGuestsScalarWhereWithAggregatesInput[]
+    NOT?: AdditionalGuestsScalarWhereWithAggregatesInput | AdditionalGuestsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdditionalGuests"> | string
+    count?: IntWithAggregatesFilter<"AdditionalGuests"> | number
+    updatedAt?: DateTimeWithAggregatesFilter<"AdditionalGuests"> | Date | string
+  }
+
   export type FoodOptionCreateInput = {
     id: string
     name: string
@@ -4376,6 +5537,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AdditionalGuestsCreateInput = {
+    id?: string
+    count?: number
+    updatedAt?: Date | string
+  }
+
+  export type AdditionalGuestsUncheckedCreateInput = {
+    id?: string
+    count?: number
+    updatedAt?: Date | string
+  }
+
+  export type AdditionalGuestsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdditionalGuestsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdditionalGuestsCreateManyInput = {
+    id?: string
+    count?: number
+    updatedAt?: Date | string
+  }
+
+  export type AdditionalGuestsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdditionalGuestsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -4507,6 +5710,59 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type AdditionalGuestsCountOrderByAggregateInput = {
+    id?: SortOrder
+    count?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdditionalGuestsAvgOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type AdditionalGuestsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    count?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdditionalGuestsMinOrderByAggregateInput = {
+    id?: SortOrder
+    count?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdditionalGuestsSumOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -4517,6 +5773,14 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4597,6 +5861,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
 

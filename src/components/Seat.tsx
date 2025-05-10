@@ -40,7 +40,7 @@ const Seat: React.FC<SeatProps> = ({ name, position, seatId }) => {
     } catch (error) {
       // Fallback to localStorage
       console.log('Using localStorage fallback for toggling seat');
-      storage.setItem(`seat-${seatId}`, String(newState));
+    storage.setItem(`seat-${seatId}`, String(newState));
     }
     
     // Dispatch custom event for the Table component to catch
@@ -51,24 +51,24 @@ const Seat: React.FC<SeatProps> = ({ name, position, seatId }) => {
 
   // Memoize class strings to avoid recalculating them on every render
   const chairClasses = `
-    relative 
-    ${position === 'bottom' ? 'order-first' : 'order-last'}
-    cursor-pointer
-    transition-all duration-300 ease-in-out
+          relative 
+          ${position === 'bottom' ? 'order-first' : 'order-last'}
+          cursor-pointer
+          transition-all duration-300 ease-in-out
     mx-auto mb-2 sm:mb-4
-    ${isAnimating ? 'scale-110' : 'hover:scale-105'}
-    transform-gpu
+          ${isAnimating ? 'scale-110' : 'hover:scale-105'}
+          transform-gpu
   `;
 
   const mainChairClasses = `
     w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] 
-    ${isSelected 
-      ? 'bg-gradient-to-br from-emerald-200 to-emerald-300 border-emerald-400' 
-      : 'bg-gradient-to-br from-slate-200 to-slate-300 border-slate-300'
-    } 
-    rounded-full shadow-lg border-2 flex items-center justify-center
-    transition-all duration-300
-    ${isSelected ? 'shadow-emerald-200/50' : ''}
+          ${isSelected 
+            ? 'bg-gradient-to-br from-emerald-200 to-emerald-300 border-emerald-400' 
+            : 'bg-gradient-to-br from-slate-200 to-slate-300 border-slate-300'
+          } 
+          rounded-full shadow-lg border-2 flex items-center justify-center
+          transition-all duration-300
+          ${isSelected ? 'shadow-emerald-200/50' : ''}
   `;
 
   const nameTagClasses = `
