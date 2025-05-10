@@ -1,8 +1,9 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/reset",
-      "schedule": "0 16 * * *"
-    }
-  ]
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "ignoreCommand": "",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "regions": ["iad1"]
 } 

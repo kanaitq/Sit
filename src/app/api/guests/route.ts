@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { guestData, checkAndResetIfNeeded } from './shared';
+import { db } from '~/lib/db';
 
 // GET endpoint to retrieve the current guest count
 export async function GET(request: NextRequest) {
   try {
-    checkAndResetIfNeeded();
+    const guestData = await db.guests.get();
     
     return NextResponse.json({
       count: guestData.count,
@@ -22,8 +22,6 @@ export async function GET(request: NextRequest) {
 // POST endpoint to update the guest count
 export async function POST(request: NextRequest) {
   try {
-    checkAndResetIfNeeded();
-    
     const body = await request.json();
     
     // Input validation
@@ -49,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Update the guest count
-    guestData.count = body.count;
+    const guestData = await db.guests.update(body.count);
     
     return NextResponse.json({
       count: guestData.count,

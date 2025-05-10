@@ -131,3 +131,46 @@ Data is automatically reset at midnight Singapore time (GMT+8). You can also man
 
 MIT
 
+## Deployment Instructions
+
+### Vercel Deployment
+
+For a successful deployment to Vercel, follow these steps:
+
+1. Make sure you have the following environment variables set in your Vercel project settings:
+   ```
+   DATABASE_URL=postgresql://user:password@localhost:5432/dummy_db
+   ```
+   (This is a placeholder and won't be used as we're using the in-memory implementation)
+
+2. Add the following build settings in your Vercel project:
+   - Framework Preset: Next.js
+   - Build Command: npm run build
+   - Output Directory: .next
+   - Install Command: npm install
+
+3. Deploy using the Vercel CLI or connect your GitHub repository to Vercel.
+
+### Local Development
+
+To run the application locally:
+
+```bash
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000).
+
+## Application Features
+
+- Seat selection with server synchronization
+- Additional guest tracking with automatic midnight reset
+- Food selection with optimized layout for better readability
+- Responsive design that works across device sizes
+- Comprehensive error handling and recovery
+- Cross-browser compatibility
+
