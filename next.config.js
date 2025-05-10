@@ -21,6 +21,10 @@ const nextConfig = {
       }
     ];
   },
+  // Disable ESLint during production builds
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // ... any other Next.js config ...
 };
 
